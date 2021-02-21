@@ -22,8 +22,20 @@ void L293D::forward() {
     digitalWrite(input_2, LOW);
 }
 
+void L293D::forward(uint8_t speed) {
+    analogWrite(enable_pin, speed);
+    digitalWrite(input_1, HIGH);
+    digitalWrite(input_2, LOW);
+}
+
 void L293D::reverse() {
     digitalWrite(enable_pin, HIGH);
+    digitalWrite(input_1, LOW);
+    digitalWrite(input_2, HIGH);
+}
+
+void L293D::reverse(uint8_t speed) {
+    analogWrite(enable_pin, speed);
     digitalWrite(input_1, LOW);
     digitalWrite(input_2, HIGH);
 }

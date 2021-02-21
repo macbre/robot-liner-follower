@@ -17,9 +17,10 @@ L293D right(INPUT_B1, INPUT_B2, ENABLE_2);
 
 // cppcheck-suppress unusedFunction
 void setup() {
-  // put your setup code here, to run once:
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
+
+  Serial.begin(115200);
 
   left.init();
   right.init();
@@ -27,15 +28,23 @@ void setup() {
 
 // cppcheck-suppress unusedFunction
 void loop() {
-  // put your main code here, to run repeatedly:
+  unsigned char speed;
   digitalWrite(LED_BUILTIN, HIGH);
-  left.forward();
-  delay(1500);
+
+  // speed up
+  for(speed=100; speed<255; speed++) {
+    left.forward(speed);
+    delay(25);
+  }
 
   digitalWrite(LED_BUILTIN, LOW);
-  left.reverse();
-  delay(1500);
 
-  left.off();
-  delay(500);
+  // slow down
+  for(speed=255; speed>100; speed--) {
+    left.forward(speed);
+    delay(25);
+  }
+
+  // left.off();
+  // delay(500);
 }

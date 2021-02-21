@@ -6,7 +6,9 @@ class L293D {
         void init();
 
         void forward();
+        void forward(uint8_t speed);
         void reverse();
+        void reverse(uint8_t speed);
         void off();
 
     private:
