@@ -14,10 +14,17 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Load cached .platformio
+    - name: Load cached ~/.platformio
       uses: actions/cache@v2
       with:
-        path: .platformio/packages/
+        path: ~/.platformio
+        key: platformio-${{ hashFiles('**/platformio.ini') }}
+        restore-keys: platformio-
+
+    - name: Load cached ./.pio
+      uses: actions/cache@v2
+      with:
+        path: ./.pio
         key: pio-${{ hashFiles('**/platformio.ini') }}
         restore-keys: pio-
 
@@ -29,3 +36,9 @@ jobs:
 
     - name: Run linters
       run: pio check --skip-packages --fail-on-defect=low
+
+    - name: ls
+      run: |
+        pwd; echo $HOME
+        ls -lha ~
+        ls -lha .pio/
