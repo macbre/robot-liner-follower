@@ -29,3 +29,9 @@ jobs:
 
     - name: Run linters
       run: pio check --skip-packages --fail-on-defect=low
+
+    - name: ls
+      run: |
+        pwd
+        env
+        ls -lh .platformio/
