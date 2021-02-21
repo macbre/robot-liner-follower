@@ -34,4 +34,4 @@ jobs:
       run: |
         pwd
         env
-        ls -lh .platformio/
+        ls -lh .
