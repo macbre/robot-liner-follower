@@ -33,5 +33,4 @@ jobs:
     - name: ls
       run: |
         pwd
-        env
-        ls -lh .
+        ls -lha .
