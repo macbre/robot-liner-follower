@@ -1,0 +1,31 @@
+name: Platform.io
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Load cached .platformio
+      uses: actions/cache@v2
+      with:
+        path: .platformio/packages/
+        key: pio-${{ hashFiles('**/platformio.ini') }}
+        restore-keys: pio-
+
+    - name: Install pio
+      run: pip install -U platformio
+
+    - name: Build the project
+      run: pio run
+
+    - name: Run linters
+      run: pio check --skip-packages --fail-on-defect=low
