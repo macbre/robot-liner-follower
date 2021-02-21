@@ -32,5 +32,6 @@ jobs:
 
     - name: ls
       run: |
-        pwd
-        ls -lha .
+        pwd; echo $HOME
+        ls -lha ~
+        ls -lha .pio/
