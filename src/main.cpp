@@ -15,6 +15,7 @@
 L293D left(INPUT_A1, INPUT_A2, ENABLE_1);
 L293D right(INPUT_B1, INPUT_B2, ENABLE_2);
 
+// cppcheck-suppress unusedFunction
 void setup() {
   // put your setup code here, to run once:
   pinMode(LED_BUILTIN, OUTPUT);
@@ -24,6 +25,7 @@ void setup() {
   right.init();
 }
 
+// cppcheck-suppress unusedFunction
 void loop() {
   // put your main code here, to run repeatedly:
   digitalWrite(LED_BUILTIN, HIGH);
