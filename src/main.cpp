@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "l293d.h"
+#include <l293d.h>
 
 // left motor
 #define ENABLE_1 9
@@ -11,6 +11,8 @@
 #define INPUT_B1 11
 #define INPUT_B2 12
 
+#define MIN_SPEED 80
+#define MAX_SPEED 255
 
 L293D left(INPUT_A1, INPUT_A2, ENABLE_1);
 L293D right(INPUT_B1, INPUT_B2, ENABLE_2);
@@ -24,6 +26,9 @@ void setup() {
 
   left.init();
   right.init();
+
+  left.forward();
+  delay(500);
 }
 
 // cppcheck-suppress unusedFunction
@@ -32,7 +37,7 @@ void loop() {
   digitalWrite(LED_BUILTIN, HIGH);
 
   // speed up
-  for(speed=100; speed<255; speed++) {
+  for(speed=MIN_SPEED; speed<MAX_SPEED; speed++) {
     left.forward(speed);
     delay(25);
   }
@@ -40,7 +45,7 @@ void loop() {
   digitalWrite(LED_BUILTIN, LOW);
 
   // slow down
-  for(speed=255; speed>100; speed--) {
+  for(speed=MAX_SPEED; speed>MIN_SPEED; speed--) {
     left.forward(speed);
     delay(25);
   }
