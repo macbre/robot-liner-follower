@@ -17,7 +17,7 @@
 L293D left(INPUT_A1, INPUT_A2, ENABLE_1);
 L293D right(INPUT_B1, INPUT_B2, ENABLE_2);
 
-// line detectors
+// line detectors - TCRT5000
 #define LINE_LEFT A3
 #define LINE_RIGHT A2
 #define LINE_DETECTED_THRESHOLD 300
@@ -47,13 +47,20 @@ void loop() {
   Serial.print("\tRight ");
   Serial.println(lineDetectorRight);
 
+  // line detected on both lines
+  if (lineDetectorLeft > LINE_DETECTED_THRESHOLD && lineDetectorRight > LINE_DETECTED_THRESHOLD) {
+    left.forward(255);
+    right.forward(255);
+
+    Serial.println(" ## Line between");
+  }
   // line detected on left
-  if (lineDetectorLeft > LINE_DETECTED_THRESHOLD) {
+  else if (lineDetectorLeft > LINE_DETECTED_THRESHOLD) {
     // robot turns right
     left.reverse(128);
     right.forward(255);
 
-    Serial.println(" > Line on left");
+    Serial.println(" << Line on left");
   }
   // line detected on right
   else if (lineDetectorRight > LINE_DETECTED_THRESHOLD) {
@@ -61,12 +68,14 @@ void loop() {
     right.reverse(128);
     left.forward(255);
 
-    Serial.println(" > Line on right");
+    Serial.println(" >> Line on right");
   }
   // we're in between the lines - full throttle
   else {
     left.forward(255);
     right.forward(255);
+
+    Serial.println(" ## Line between");
   }
 
   delay(250);
