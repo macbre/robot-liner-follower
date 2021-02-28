@@ -8,14 +8,19 @@
 
 // right motor
 #define ENABLE_2 6
-#define INPUT_B1 11
-#define INPUT_B2 12
+#define INPUT_B1 5
+#define INPUT_B2 4
 
 #define MIN_SPEED 80
 #define MAX_SPEED 255
 
 L293D left(INPUT_A1, INPUT_A2, ENABLE_1);
 L293D right(INPUT_B1, INPUT_B2, ENABLE_2);
+
+// line detectors
+#define LINE_LEFT A3
+#define LINE_RIGHT A2
+#define LINE_DETECTED_THRESHOLD 300
 
 // cppcheck-suppress unusedFunction
 void setup() {
@@ -28,28 +33,41 @@ void setup() {
   right.init();
 
   left.forward();
-  delay(500);
+  right.forward();
 }
 
 // cppcheck-suppress unusedFunction
 void loop() {
-  unsigned char speed;
-  digitalWrite(LED_BUILTIN, HIGH);
+  int lineDetectorLeft = analogRead(LINE_LEFT);
 
-  // speed up
-  for(speed=MIN_SPEED; speed<MAX_SPEED; speed++) {
-    left.forward(speed);
-    delay(25);
+  Serial.print("Left ");
+  Serial.print(lineDetectorLeft);
+
+  int lineDetectorRight = analogRead(LINE_RIGHT);
+  Serial.print("\tRight ");
+  Serial.println(lineDetectorRight);
+
+  // line detected on left
+  if (lineDetectorLeft > LINE_DETECTED_THRESHOLD) {
+    // robot turns right
+    left.reverse(128);
+    right.forward(255);
+
+    Serial.println(" > Line on left");
+  }
+  // line detected on right
+  else if (lineDetectorRight > LINE_DETECTED_THRESHOLD) {
+    // robot turns left
+    right.reverse(128);
+    left.forward(255);
+
+    Serial.println(" > Line on right");
+  }
+  // we're in between the lines - full throttle
+  else {
+    left.forward(255);
+    right.forward(255);
   }
 
-  digitalWrite(LED_BUILTIN, LOW);
-
-  // slow down
-  for(speed=MAX_SPEED; speed>MIN_SPEED; speed--) {
-    left.forward(speed);
-    delay(25);
-  }
-
-  // left.off();
-  // delay(500);
+  delay(250);
 }
