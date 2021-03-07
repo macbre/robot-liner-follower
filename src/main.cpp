@@ -1,82 +1,86 @@
 #include <Arduino.h>
-#include <l293d.h>
 
 // left motor
-#define ENABLE_1 9
-#define INPUT_A1 8
-#define INPUT_A2 7
+#define MOTOR_LEFT_PIN 3
+#define MOTOR_RIGHT_PIN 2
 
-// right motor
-#define ENABLE_2 6
-#define INPUT_B1 5
-#define INPUT_B2 4
-
-#define MIN_SPEED 80
+#define MIN_SPEED 0
 #define MAX_SPEED 255
-
-L293D left(INPUT_A1, INPUT_A2, ENABLE_1);
-L293D right(INPUT_B1, INPUT_B2, ENABLE_2);
 
 // line detectors - TCRT5000
 #define LINE_LEFT A3
+#define LINE_CENTER A1
 #define LINE_RIGHT A2
-#define LINE_DETECTED_THRESHOLD 300
+#define LINE_DETECTED_THRESHOLD 500
+
+void blink() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(20);
+  digitalWrite(LED_BUILTIN, LOW);
+}
+
 
 // cppcheck-suppress unusedFunction
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
+  blink();
 
   Serial.begin(115200);
 
-  left.init();
-  right.init();
-
-  left.forward();
-  right.forward();
+  pinMode(MOTOR_LEFT_PIN, OUTPUT);
+  pinMode(MOTOR_RIGHT_PIN, OUTPUT);
+  // analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
+  // analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 }
 
 // cppcheck-suppress unusedFunction
 void loop() {
   int lineDetectorLeft = analogRead(LINE_LEFT);
+  int lineDetectorCenter = analogRead(LINE_CENTER);
+  int lineDetectorRight = analogRead(LINE_RIGHT);
 
   Serial.print("Left ");
   Serial.print(lineDetectorLeft);
 
-  int lineDetectorRight = analogRead(LINE_RIGHT);
+  Serial.print("\tCenter ");
+  Serial.print(lineDetectorCenter);
+
   Serial.print("\tRight ");
   Serial.println(lineDetectorRight);
 
+  blink();
+  delay(20);
+  // return;
+
   // line detected on both lines
   if (lineDetectorLeft > LINE_DETECTED_THRESHOLD && lineDetectorRight > LINE_DETECTED_THRESHOLD) {
-    left.forward(255);
-    right.forward(255);
+    analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
+    analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 
     Serial.println(" ## Line between");
   }
   // line detected on left
   else if (lineDetectorLeft > LINE_DETECTED_THRESHOLD) {
     // robot turns right
-    left.reverse(128);
-    right.forward(255);
+    analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
+    analogWrite(MOTOR_RIGHT_PIN, MIN_SPEED);
 
     Serial.println(" << Line on left");
   }
   // line detected on right
   else if (lineDetectorRight > LINE_DETECTED_THRESHOLD) {
     // robot turns left
-    right.reverse(128);
-    left.forward(255);
+    analogWrite(MOTOR_LEFT_PIN, MIN_SPEED);
+    analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 
     Serial.println(" >> Line on right");
   }
   // we're in between the lines - full throttle
   else {
-    left.forward(255);
-    right.forward(255);
+    analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
+    analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 
     Serial.println(" ## Line between");
   }
 
-  delay(250);
 }
