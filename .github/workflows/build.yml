@@ -14,22 +14,20 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Load cached ~/.platformio
+    - name: Load the cache for Platform.io and Python's pip
       uses: actions/cache@v2
       with:
-        path: ~/.platformio
-        key: platformio-${{ hashFiles('**/platformio.ini') }}
+        path: |
+          ~/.platformio
+          ./.pio
+          ~/.cache/pip
+        key: platformio-${{ hashFiles('**/platformio.ini') }}-v2
         restore-keys: platformio-
 
-    - name: Load cached ./.pio
-      uses: actions/cache@v2
-      with:
-        path: ./.pio
-        key: pio-${{ hashFiles('**/platformio.ini') }}
-        restore-keys: pio-
-
     - name: Install pio
-      run: pip install -U platformio
+      run: |
+        pip install wheel
+        pip install -U platformio
 
     - name: Build the project
       run: pio run
