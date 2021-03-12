@@ -14,12 +14,13 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Load the cache
+    - name: Load the cache for Platform.io and Python's pip
       uses: actions/cache@v2
       with:
         path: |
           ~/.platformio
           ./.pio
+          ~/.cache/pip
         key: platformio-${{ hashFiles('**/platformio.ini') }}
         restore-keys: platformio-
 
