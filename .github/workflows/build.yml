@@ -21,11 +21,13 @@ jobs:
           ~/.platformio
           ./.pio
           ~/.cache/pip
-        key: platformio-${{ hashFiles('**/platformio.ini') }}
+        key: platformio-${{ hashFiles('**/platformio.ini') }}-v2
         restore-keys: platformio-
 
     - name: Install pio
-      run: pip install -U platformio
+      run: |
+        pip install wheel
+        pip install -U platformio
 
     - name: Build the project
       run: pio run
