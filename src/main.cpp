@@ -2,7 +2,7 @@
 
 // left motor
 #define MOTOR_LEFT_PIN 3
-#define MOTOR_RIGHT_PIN 2
+#define MOTOR_RIGHT_PIN 4
 
 #define MIN_SPEED 0
 #define MAX_SPEED 160
@@ -29,9 +29,11 @@ void setup() {
 
   pinMode(MOTOR_LEFT_PIN, OUTPUT);
   pinMode(MOTOR_RIGHT_PIN, OUTPUT);
-  // analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
-  // analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
+  analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
+  analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 }
+
+unsigned char incr = 0;
 
 // cppcheck-suppress unusedFunction
 void loop() {
@@ -39,17 +41,18 @@ void loop() {
   int lineDetectorCenter = analogRead(LINE_CENTER);
   int lineDetectorRight = analogRead(LINE_RIGHT);
 
-  Serial.print("Left ");
-  Serial.print(lineDetectorLeft);
+  if (incr++ == 0) {
+    Serial.print("Left ");
+    Serial.print(lineDetectorLeft);
 
-  Serial.print("\tCenter ");
-  Serial.print(lineDetectorCenter);
+    Serial.print("\tCenter ");
+    Serial.print(lineDetectorCenter);
 
-  Serial.print("\tRight ");
-  Serial.println(lineDetectorRight);
+    Serial.print("\tRight ");
+    Serial.println(lineDetectorRight);
 
-  blink();
-  delay(20);
+    blink();
+  }
   // return;
 
   // line detected on both lines
@@ -57,7 +60,7 @@ void loop() {
     analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
     analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 
-    Serial.println(" ## Line between");
+    // Serial.println(" ## Line between");
   }
   // line detected on left
   else if (lineDetectorLeft > LINE_DETECTED_THRESHOLD) {
@@ -65,7 +68,7 @@ void loop() {
     analogWrite(MOTOR_LEFT_PIN, MIN_SPEED);
     analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 
-    Serial.println(" << Line on left");
+    // Serial.println(" << Line on left");
   }
   // line detected on right
   else if (lineDetectorRight > LINE_DETECTED_THRESHOLD) {
@@ -73,14 +76,14 @@ void loop() {
     analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
     analogWrite(MOTOR_RIGHT_PIN, MIN_SPEED);
 
-    Serial.println(" >> Line on right");
+    // Serial.println(" >> Line on right");
   }
   // we're in between the lines - full throttle
   else {
     analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
     analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 
-    Serial.println(" ## Line between");
+    // Serial.println(" ## Line between");
   }
 
 }
