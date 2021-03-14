@@ -5,12 +5,12 @@
 #define MOTOR_RIGHT_PIN 2
 
 #define MIN_SPEED 0
-#define MAX_SPEED 255
+#define MAX_SPEED 160
 
 // line detectors - TCRT5000
-#define LINE_LEFT A3
+#define LINE_LEFT A2
 #define LINE_CENTER A1
-#define LINE_RIGHT A2
+#define LINE_RIGHT A3
 #define LINE_DETECTED_THRESHOLD 500
 
 void blink() {
@@ -61,17 +61,17 @@ void loop() {
   }
   // line detected on left
   else if (lineDetectorLeft > LINE_DETECTED_THRESHOLD) {
-    // robot turns right
-    analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
-    analogWrite(MOTOR_RIGHT_PIN, MIN_SPEED);
+    // robot turns left
+    analogWrite(MOTOR_LEFT_PIN, MIN_SPEED);
+    analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 
     Serial.println(" << Line on left");
   }
   // line detected on right
   else if (lineDetectorRight > LINE_DETECTED_THRESHOLD) {
-    // robot turns left
-    analogWrite(MOTOR_LEFT_PIN, MIN_SPEED);
-    analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
+    // robot turns right
+    analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
+    analogWrite(MOTOR_RIGHT_PIN, MIN_SPEED);
 
     Serial.println(" >> Line on right");
   }
