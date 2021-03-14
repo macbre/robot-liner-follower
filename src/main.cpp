@@ -1,11 +1,11 @@
 #include <Arduino.h>
 
-// left motor
-#define MOTOR_LEFT_PIN 3
-#define MOTOR_RIGHT_PIN 4
+// motors
+#define MOTOR_LEFT_PIN 5
+#define MOTOR_RIGHT_PIN 10
 
 #define MIN_SPEED 0
-#define MAX_SPEED 160
+#define MAX_SPEED 150
 
 // line detectors - TCRT5000
 #define LINE_LEFT A2
@@ -29,8 +29,8 @@ void setup() {
 
   pinMode(MOTOR_LEFT_PIN, OUTPUT);
   pinMode(MOTOR_RIGHT_PIN, OUTPUT);
-  analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
-  analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
+  // analogWrite(MOTOR_LEFT_PIN, MAX_SPEED);
+  // analogWrite(MOTOR_RIGHT_PIN, MAX_SPEED);
 }
 
 unsigned char incr = 0;
